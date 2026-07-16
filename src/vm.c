@@ -107,11 +107,11 @@ void vm_run(VirtualMachine* vm) {
             case SET: {
                 // Read register index
                 uint8_t reg_index = vm->memory[vm->ip];
-                vm->ip++; // Add 1 to IP as we'be read the register index
+                vm->ip++; // Add 1 to IP as we've read the register index
                 
                 // Read the value that will be stored in the index
                 int value = *(int*)&vm->memory[vm->ip];
-                vm->ip += 4; // Add 4 to IP as we'be read the 4 Bytes value
+                vm->ip += 4; // Add 4 to IP as we've read the 4 Bytes value
 
                 if (reg_index >= NUM_REGISTERS) {
                     printf("ERROR: Register index %d not valid\n", reg_index);
@@ -138,6 +138,60 @@ void vm_run(VirtualMachine* vm) {
                 vm->ip = address;
                 
                 printf("VM [JMP] -> Jumped to the address %d\n", address);
+                break;
+            }
+
+            case GET: {
+                // Read register index
+                uint8_t reg_index = vm->memory[vm->ip];
+                vm->ip++; // Add 1 to IP as we've read the register index
+                
+                int value = vm->registers[reg_index];
+                push(vm, value);
+                printf("VM [GET] -> Read %d from register R%d and added to the Stack\n", value, reg_index);
+                break;
+            }
+            
+            case STR: {
+                // Read register index
+                uint8_t reg_index = vm->memory[vm->ip];
+                vm->ip++; // Add 1 to IP as we've read the register index
+                
+                int value = pop(vm);
+                vm->registers[reg_index] = value;
+                printf("VM [STR] -> Popped %d from the Stack and stored in register R%d\n", value, reg_index);
+                break;
+            }
+
+            case BZ: {
+                // Read Memory address (4 Bytes)
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                int condition = pop(vm);
+                
+                if (condition == 0) {
+                    vm->ip = address;
+                    printf("VM [JZ]  -> Condition is true. Jumping to %d\n", address);
+                } else {
+                    printf("VM [JZ]  -> Condition is false (%d is not 0). Not jumping.\n", condition);
+                }
+                break;
+            }
+
+            case BNZ: {
+                // Read Memory address (4 Bytes)
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                int condition = pop(vm);
+                
+                if (condition != 0) {
+                    vm->ip = address;
+                    printf("VM [JNZ] -> Condition is true (%d is not 0). Jumping to %d\n", condition, address);
+                } else {
+                    printf("VM [JNZ] -> Condition is false. Not jumping.\n", condition);
+                }
                 break;
             }
 
