@@ -195,8 +195,49 @@ void vm_run(VirtualMachine* vm) {
                 break;
             }
 
+            case LOAD: {
+                // Read Memory address (4 Bytes)
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE - 3) {
+                    printf("ERROR: Load in %d is out of range.\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                // Turn address int
+                int value = *(int*)&vm->memory[address];
+                
+                // Push value to the Stack
+                push(vm, value);
+                printf("VM [LOAD] -> Load %d to the Stack, from memory address %d.\n", value, address);
+                break;
+            }
+
+            case STORE: {
+                // Read Memory address (4 Bytes)
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE - 3) {
+                    printf("ERROR: Store in %d is out of range.\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                // Pop value from the Stack
+                int value = pop(vm);
+                
+                // Value added to the memory
+                *(int*)&vm->memory[address] = value;
+                
+                printf("VM [STORE] -> Store %d in memory adress %d.\n", value, address);
+                break;
+            }
+
             default:
-                printf("FATAL ERROR: Unknown Opcode 0x%02X in address %d\n", opcode, vm->ip - 1);
+                printf("FATAL ERROR: Unknown Opcode 0x%02X in address %d.\n", opcode, vm->ip - 1);
                 vm->running = false;
                 break;
         }
