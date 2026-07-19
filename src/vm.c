@@ -17,7 +17,7 @@ void vm_init(VirtualMachine* vm) {
 
 void vm_load_program(VirtualMachine* vm, uint8_t* program, int size) {
     if (size > MEMORY_SIZE) {
-        printf("ERROR: The program is bigger than the memory.\n");
+        printf("ERROR: Program is bigger than memory.\n");
         return;
     }
     memcpy(vm->memory, program, size);
@@ -233,6 +233,139 @@ void vm_run(VirtualMachine* vm) {
                 *(int*)&vm->memory[address] = value;
                 
                 printf("VM [STORE] -> Store %d in memory adress %d.\n", value, address);
+                break;
+            }
+
+            case BEQ: {
+                // Read the address we want to jump (4 Bytes)
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE) {
+                    printf("ERROR: Invalid jump address %d\n", address);
+                    vm->running = false;
+                    break;
+                }
+                // Pop the two values
+                int b = pop(vm);
+                int a = pop(vm);
+                
+                if (a == b) {
+                    vm->ip = address;
+                    printf("VM [BEQ] -> Condition is true (%d == %d). Jumping to %d\n", a, b, address);
+                } else {
+                    printf("VM [BEQ] -> Condition is false (%d != %d). Not jumping.\n", a, b);
+                }
+                break;
+            }
+
+            case BNE: {
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE) {
+                    printf("ERROR: Invalid jump address %d\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                int b = pop(vm);
+                int a = pop(vm);
+                
+                if (a != b) {
+                    vm->ip = address;
+                    printf("VM [BNE] -> Condition is true (%d != %d). Jumping to %d\n", a, b, address);
+                } else {
+                    printf("VM [BNE] -> Condition is false (%d == %d). Not jumping.\n", a, b);
+                }
+                break;
+            }
+
+            case BGT: {
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE) {
+                    printf("ERROR: Invalid jump address %d\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                int b = pop(vm);
+                int a = pop(vm);
+                
+                if (a > b) {
+                    vm->ip = address;
+                    printf("VM [BGT] -> Condition is true (%d > %d). Jumping to %d\n", a, b, address);
+                } else {
+                    printf("VM [BGT] -> Condition is false (%d <= %d). Not jumping.\n", a, b);
+                }
+                break;
+            }
+
+            case BLT: {
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE) {
+                    printf("ERROR: Invalid jump address %d\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                int b = pop(vm);
+                int a = pop(vm);
+                
+                if (a < b) {
+                    vm->ip = address;
+                    printf("VM [BLT] -> Condition is true (%d < %d). Jumping to %d\n", a, b, address);
+                } else {
+                    printf("VM [BLT] -> Condition is false (%d >= %d). Not jumping.\n", a, b);
+                }
+                break;
+            }
+
+            case BGE: {
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE) {
+                    printf("ERROR: Invalid jump address %d\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                int b = pop(vm);
+                int a = pop(vm);
+                
+                if (a >= b) {
+                    vm->ip = address;
+                    printf("VM [BGE] -> Condition is true (%d >= %d). Jumping to %d\n", a, b, address);
+                } else {
+                    printf("VM [BGE] -> Condition is false (%d < %d). Not jumping.\n", a, b);
+                }
+                break;
+            }
+
+            case BLE: {
+                int address = *(int*)&vm->memory[vm->ip];
+                vm->ip += 4;
+                
+                if (address < 0 || address >= MEMORY_SIZE) {
+                    printf("ERROR: Invalid jump address %d\n", address);
+                    vm->running = false;
+                    break;
+                }
+                
+                int b = pop(vm);
+                int a = pop(vm);
+                
+                if (a <= b) {
+                    vm->ip = address;
+                    printf("VM [BLE] -> Condition is true (%d <= %d). Jumping to %d\n", a, b, address);
+                } else {
+                    printf("VM [BLE] -> Condition is false (%d > %d). Not jumping.\n", a, b);
+                }
                 break;
             }
 

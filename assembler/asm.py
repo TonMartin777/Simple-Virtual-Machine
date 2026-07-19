@@ -5,7 +5,8 @@ import struct
 OPCODES = {
     "HLT": 0x00, "PSH": 0x01, "POP": 0x02, "ADD": 0x03, "SUB": 0x04,
     "SET": 0x05, "JMP": 0x06, "GET": 0x07, "STR": 0x08, "BZ":  0x09,
-    "BNZ": 0x0A, "LOAD": 0x0B, "STORE": 0x0C
+    "BNZ": 0x0A, "LOAD": 0x0B, "STORE": 0x0C, "BEQ": 0x0D, "BNE": 0x0E,
+    "BGT": 0x0F, "BLT": 0x10, "BGE": 0x11, "BLE": 0x12
 }
 
 def assemble(input_file, output_file):
@@ -36,7 +37,7 @@ def assemble(input_file, output_file):
         parts = line.split()
         instruction = parts[0].upper()
 
-        if instruction in ["PSH", "JMP", "BZ", "BNZ", "LOAD", "STORE"]:
+        if instruction in ["PSH", "JMP", "BZ", "BNZ", "LOAD", "STORE", "BEQ", "BNE", "BGT", "BLT", "BGE", "BLE"]:
             current_byte += 5 # 1B opcode + 4B int
         elif instruction == "SET":
             current_byte += 6 # 1B opcode + 1B reg + 4B int
@@ -59,13 +60,13 @@ def assemble(input_file, output_file):
         bytecode.append(OPCODES[instruction])
         
         try:
-            if instruction in ["JMP", "BZ", "BNZ"]:
-                # Si el parámetro es un texto (etiqueta), buscamos su byte en el diccionario
+            if instruction in ["JMP", "BZ", "BNZ", "BEQ", "BNE", "BGT", "BLT", "BGE", "BLE"]:
+                # If argument is a string, search in dictionary
                 arg_str = parts[1]
                 if arg_str in labels:
                     arg = labels[arg_str]
                 else:
-                    arg = int(arg_str) # Por si seguimos queriendo usar números a mano
+                    arg = int(arg_str)
                 bytecode.extend(struct.pack('<i', arg))
                 
             elif instruction in ["PSH", "LOAD", "STORE"]:
@@ -98,7 +99,7 @@ def assemble(input_file, output_file):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Use: python asm.py <archivo.asm> <archivo.bin>")
+        print("Use: python asm.py <file.asm> <file.bin>")
         sys.exit(1)
         
     assemble(sys.argv[1], sys.argv[2])

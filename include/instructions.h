@@ -15,7 +15,13 @@ typedef enum {
     BZ = 0x09,      // Jump if value pointed by SP is 0
     BNZ = 0x0A,     // Jump if value pointed by SP is not 0
     LOAD = 0x0B,    // Push value from Memory (arg1) to Stack
-    STORE = 0x0C    // Store top of the Stack in Memory (arg1)
+    STORE = 0x0C,   // Store top of the Stack in Memory (arg1)
+    BEQ = 0x0D,     // Jump if last values from the Stack are equal
+    BNE = 0x0E,     // Jump if last values from the Stack are not equal
+    BGT = 0x0F,     // Jump if second to last is greater than top of the Stack
+    BLT = 0x10,     // Jump if second to last is less than top of the Stack
+    BGE = 0x11,     // Jump if second to last is greater or equal than top of the Stack
+    BLE = 0x12      // Jump if second to last is less or equal than top of the Stack
 
 } Opcode;
 
