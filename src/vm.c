@@ -17,7 +17,7 @@ void vm_init(VirtualMachine* vm) {
 
 void vm_load_program(VirtualMachine* vm, uint8_t* program, int size) {
     if (size > MEMORY_SIZE) {
-        printf("ERROR: El programa es más grande que la memoria RAM.\n");
+        printf("ERROR: The program is bigger than the memory.\n");
         return;
     }
     memcpy(vm->memory, program, size);
