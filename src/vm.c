@@ -44,13 +44,45 @@ int pop(VirtualMachine* vm) {
     return vm->stack[vm->sp];
 }
 
+void print_debugger(VirtualMachine *vm) {
+    printf("\n==================== VM DEBUGGER ====================\n");
+    
+    // Print IP and Opcode
+    printf("IP: %04d   |   Following Opcode: 0x%02X\n", vm->ip, vm->memory[vm->ip]);
+    printf("-----------------------------------------------------\n");
+    
+    // Print registers
+    printf("REGISTERS: ");
+    for (int i = 0; i < NUM_REGISTERS; i++) {
+        printf("R%d:[%d]  ", i, vm->registers[i]);
+    }
+    printf("\n");
+    printf("-----------------------------------------------------\n");
+
+    // Print Stack and SP
+    printf("STACK (SP: %d): [ ", vm->sp);
+    for (int i = 0; i < vm->sp; i++) {
+        printf("%d ", vm->stack[i]);
+    }
+    printf("]\n");
+    printf("=====================================================\n\n");
+}
+
 // Main loop
 void vm_run(VirtualMachine* vm) {
     vm->running = true;
-    printf("Starting Virtual Machine...\n");
+    bool debug_mode = false;
 
+    printf("Starting Virtual Machine...\n");
     // Infinite loop
-    while (vm->running) {
+    while (vm->running && vm->ip < MEMORY_SIZE) {
+
+        if (debug_mode) {
+            print_debugger(vm);
+            
+            printf("Press ENTER to execute following instruction");
+            getchar();
+        }
         
         // INSTRUCTION FETCH (Read byte and add 1 to IP)
         uint8_t opcode = vm->memory[vm->ip];
