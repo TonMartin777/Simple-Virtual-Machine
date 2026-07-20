@@ -69,9 +69,8 @@ void print_debugger(VirtualMachine *vm) {
 }
 
 // Main loop
-void vm_run(VirtualMachine* vm) {
+void vm_run(VirtualMachine* vm, bool debug_mode) {
     vm->running = true;
-    bool debug_mode = false;
 
     printf("Starting Virtual Machine...\n");
     // Infinite loop

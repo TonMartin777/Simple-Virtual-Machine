@@ -1,11 +1,25 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 #include <stdlib.h>
 #include "vm.h"
 
 int main(int argc, char** argv) {
+    bool debug_mode = false;
+    char* file_path = NULL;
+
+    // Activate flag of debug_mode
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--debug") == 0) {
+            debug_mode = true;
+        } else {
+            file_path = argv[i];
+        }
+    }
+
     // Check if file format is ok
-    if (argc < 2) {
-        printf("Use: %s <archivo.bin>.\n", argv[0]);
+    if (file_path == NULL) {
+        printf("Use: %s <file.bin> [-d]\n", argv[0]);
         return 1;
     }
 
@@ -24,7 +38,7 @@ int main(int argc, char** argv) {
     printf("Cargados %zu bytes en la memoria.\n", bytes_read);
     
     fclose(file);
-    vm_run(&vm);
+    vm_run(&vm, debug_mode);
 
     return 0;
 }

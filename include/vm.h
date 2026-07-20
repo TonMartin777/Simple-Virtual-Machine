@@ -25,6 +25,6 @@ typedef struct {
 // Public Interface
 void vm_init(VirtualMachine* vm);
 void vm_load_program(VirtualMachine* vm, uint8_t* program, int size);
-void vm_run(VirtualMachine* vm);
+void vm_run(VirtualMachine* vm, bool debug_mode);
 
 #endif
