@@ -135,7 +135,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 break;
             }
 
-            case SET: {
+            case SETI: {
                 // Read register index
                 uint8_t reg_index = vm->memory[vm->ip];
                 vm->ip++; // Add 1 to IP as we've read the register index
@@ -172,7 +172,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 break;
             }
 
-            case GET: {
+            case PUSHR: {
                 // Read register index
                 uint8_t reg_index = vm->memory[vm->ip];
                 vm->ip++; // Add 1 to IP as we've read the register index
@@ -183,7 +183,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 break;
             }
             
-            case STR: {
+            case POPR: {
                 // Read register index
                 uint8_t reg_index = vm->memory[vm->ip];
                 vm->ip++; // Add 1 to IP as we've read the register index
