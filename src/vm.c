@@ -13,6 +13,7 @@ void vm_init(VirtualMachine* vm) {
     vm->ip = 0;
     vm->sp = 0;
     vm->running = false;
+    vm->code_size = 0;
 }
 
 void vm_load_program(VirtualMachine* vm, uint8_t* program, int size) {
@@ -21,6 +22,7 @@ void vm_load_program(VirtualMachine* vm, uint8_t* program, int size) {
         return;
     }
     memcpy(vm->memory, program, size);
+    vm->code_size = size;
 }
 
 // Methods for the Stack
@@ -66,6 +68,26 @@ void print_debugger(VirtualMachine *vm) {
     }
     printf("]\n");
     printf("=====================================================\n\n");
+}
+
+void dump_data_memory(VirtualMachine *vm) {
+    printf("\n--- Data Memory Dump ---\n");
+    
+    // Empieza donde termina el código, alineado a 4 bytes
+    uint32_t start_data = (vm->code_size + 3) & ~3; 
+
+    for (uint32_t i = start_data; i < MEMORY_SIZE; i += 4) {
+        
+        uint32_t value = vm->memory[i] | 
+                        (vm->memory[i+1] << 8) | 
+                        (vm->memory[i+2] << 16) | 
+                        (vm->memory[i+3] << 24);
+        
+        if (value != 0) {
+            printf("[0x%04X] : %10d  (0x%08X)\n", i, value, value);
+        }
+    }
+    printf("------------------------\n");
 }
 
 // Main loop
@@ -408,4 +430,8 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
     }
     
     printf("Virtual Machine Stopped\n");
+
+    if (debug_mode) {
+        dump_data_memory(vm);
+    }
 }

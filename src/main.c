@@ -35,7 +35,8 @@ int main(int argc, char** argv) {
 
     // Store all bytes from the file to the Memory
     size_t bytes_read = fread(vm.memory, 1, MEMORY_SIZE, file);
-    printf("Cargados %zu bytes en la memoria.\n", bytes_read);
+    vm.code_size = (uint32_t)bytes_read;
+    printf("Stored %zu bytes in memory.\n", bytes_read);
     
     fclose(file);
     vm_run(&vm, debug_mode);

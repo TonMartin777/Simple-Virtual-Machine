@@ -1,5 +1,12 @@
 ; Loads two values from memory and stores the maximum in a new memory address.
 
+; Init values in memory
+PUSH 42         ; imm 42 -> Stack
+STORE 256       ; Stack -> Memory(256)
+
+PUSH 15         ; imm 15 -> Stack
+STORE 260       ; Stack -> Memory(260)
+
 ; Load values from address 256 and 260 to the Stack
 LOAD 256                ; Memory(256) -> Stack
 LOAD 260                ; Memory(260) -> Stack

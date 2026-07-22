@@ -20,6 +20,7 @@ typedef struct {
     
     int ip;                       // Instruction Pointer (Code)
     bool running;                 // State of the machine
+    uint32_t code_size;           // To know how much memory we have left for data
 } VirtualMachine;
 
 // Public Interface
