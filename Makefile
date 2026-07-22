@@ -1,10 +1,11 @@
 CFLAGS = -Wall -I include
 
 SRC = src/main.c src/vm.c
-TARGET = vm
+	TARGET = vm.exe
 
 all:
 	gcc $(SRC) $(CFLAGS) -o $(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	# Usamos del para compatibilidad con Windows CMD/PowerShell
+	del /Q /F $(TARGET)

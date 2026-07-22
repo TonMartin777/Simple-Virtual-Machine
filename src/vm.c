@@ -95,7 +95,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 vm->running = false;
                 break;
 
-            case PSH: {
+            case PUSH: {
                 // We take the following 4B after the Opcode
                 int value = *(int*)&vm->memory[vm->ip];
                 
@@ -103,7 +103,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 vm->ip += 4; 
                 
                 push(vm, value);
-                printf("VM [PSH] -> Value pushed: %d\n", value);
+                printf("VM [PUSH] -> Value pushed: %d\n", value);
                 break;
             }
 
@@ -151,7 +151,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 }
                 
                 vm->registers[reg_index] = value;
-                printf("VM [SET] -> Register R%d has the value %d\n", reg_index, value);
+                printf("VM [SETI] -> Register R%d has the value %d\n", reg_index, value);
                 break;
             }
 
@@ -179,7 +179,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 
                 int value = vm->registers[reg_index];
                 push(vm, value);
-                printf("VM [GET] -> Read %d from register R%d and added to the Stack\n", value, reg_index);
+                printf("VM [PUSHR] -> Read %d from register R%d and added to the Stack\n", value, reg_index);
                 break;
             }
             
@@ -190,7 +190,7 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 
                 int value = pop(vm);
                 vm->registers[reg_index] = value;
-                printf("VM [STR] -> Popped %d from the Stack and stored in register R%d\n", value, reg_index);
+                printf("VM [POPR] -> Popped %d from the Stack and stored in register R%d\n", value, reg_index);
                 break;
             }
 
@@ -203,9 +203,9 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 
                 if (condition == 0) {
                     vm->ip = address;
-                    printf("VM [JZ]  -> Condition is true. Jumping to %d\n", address);
+                    printf("VM [BZ]  -> Condition is true. Jumping to %d\n", address);
                 } else {
-                    printf("VM [JZ]  -> Condition is false (%d is not 0). Not jumping.\n", condition);
+                    printf("VM [BZ]  -> Condition is false (%d is not 0). Not jumping.\n", condition);
                 }
                 break;
             }
@@ -219,9 +219,9 @@ void vm_run(VirtualMachine* vm, bool debug_mode) {
                 
                 if (condition != 0) {
                     vm->ip = address;
-                    printf("VM [JNZ] -> Condition is true (%d is not 0). Jumping to %d\n", condition, address);
+                    printf("VM [BNZ] -> Condition is true (%d is not 0). Jumping to %d\n", condition, address);
                 } else {
-                    printf("VM [JNZ] -> Condition is false. Not jumping.\n", condition);
+                    printf("VM [BNZ] -> Condition is false. Not jumping.\n", condition);
                 }
                 break;
             }

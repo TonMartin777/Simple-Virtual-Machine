@@ -3,7 +3,7 @@ import struct
 
 # Translate instructions
 OPCODES = {
-    "HLT": 0x00, "PSH": 0x01, "POP": 0x02, "ADD": 0x03, "SUB": 0x04,
+    "HLT": 0x00, "PUSH": 0x01, "POP": 0x02, "ADD": 0x03, "SUB": 0x04,
     "SETI": 0x05, "JMP": 0x06, "PUSHR": 0x07, "PULLR": 0x08, "BZ":  0x09,
     "BNZ": 0x0A, "LOAD": 0x0B, "STORE": 0x0C, "BEQ": 0x0D, "BNE": 0x0E,
     "BGT": 0x0F, "BLT": 0x10, "BGE": 0x11, "BLE": 0x12
@@ -37,7 +37,7 @@ def assemble(input_file, output_file):
         parts = line.split()
         instruction = parts[0].upper()
 
-        if instruction in ["PSH", "JMP", "BZ", "BNZ", "LOAD", "STORE", "BEQ", "BNE", "BGT", "BLT", "BGE", "BLE"]:
+        if instruction in ["PUSH", "JMP", "BZ", "BNZ", "LOAD", "STORE", "BEQ", "BNE", "BGT", "BLT", "BGE", "BLE"]:
             current_byte += 5 # 1B opcode + 4B int
         elif instruction == "SETI":
             current_byte += 6 # 1B opcode + 1B reg + 4B int
@@ -69,7 +69,7 @@ def assemble(input_file, output_file):
                     arg = int(arg_str)
                 bytecode.extend(struct.pack('<i', arg))
                 
-            elif instruction in ["PSH", "LOAD", "STORE"]:
+            elif instruction in ["PUSH", "LOAD", "STORE"]:
                 arg = int(parts[1])
                 bytecode.extend(struct.pack('<i', arg))
                 
