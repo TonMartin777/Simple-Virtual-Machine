@@ -1,0 +1,11 @@
+# Compiled C/C++
+*.exe
+*.o
+*.out
+
+# Temporary
+__pycache__/
+*.pyc
+
+# Binary programs for the VM
+*.bin
