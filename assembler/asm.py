@@ -13,7 +13,7 @@ def assemble(input_file, output_file):
     with open(input_file, 'r') as f:
         raw_lines = f.readlines()
 
-    labels = {}         # Diccionario para guardar "nombre": byte_index
+    labels = {}         # "name": byte_index
     cleaned_lines = []  # Stores code without comments
     current_byte = 0    # Instruction Pointer counter
 
